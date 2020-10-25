@@ -401,6 +401,32 @@ namespace ATMTests
         }
 
         [Fact]
+        public void ATM_Withdrawal_All_1s_Try_Once_More_With_Something_Needing_A_1_Should_Fail_With_No_Funds()
+        {
+            var atm = new ATM();
+            
+            for (var ii = 0; ii < 10; ii++) 
+            {
+                atm.Withdrawal(1);
+            }
+
+            try 
+            {
+                atm.Withdrawal(7);
+            }
+            catch(Exception e) 
+            {
+                Assert.True(e.Message == "Insufficient Funds.");
+                Assert.True(atm.Bills.AvailableBills.Find(bill => bill.BillDenomination == 100).TotalInATM == 10);
+                Assert.True(atm.Bills.AvailableBills.Find(bill => bill.BillDenomination == 50).TotalInATM == 10);
+                Assert.True(atm.Bills.AvailableBills.Find(bill => bill.BillDenomination == 20).TotalInATM == 10);
+                Assert.True(atm.Bills.AvailableBills.Find(bill => bill.BillDenomination == 10).TotalInATM == 10);
+                Assert.True(atm.Bills.AvailableBills.Find(bill => bill.BillDenomination == 5).TotalInATM == 10);
+                Assert.True(atm.Bills.AvailableBills.Find(bill => bill.BillDenomination == 1).TotalInATM == 0);
+            }
+        }
+
+        [Fact]
         public void Cannot_Create_A_Bill_With_Less_Than_0_Denomination()
         {
             try 
